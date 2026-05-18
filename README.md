@@ -37,16 +37,7 @@ The system uses AI intent classification to route incoming requests into special
 
 ## Workflow Architecture
 
-Webhook Trigger
-↓
-Normalize Input
-↓
-AI Intent Classifier
-↓
-Switch Router
-├── Support Agent
-├── Research Agent
-└── Productivity Agent
+![Workflow Diagram](screenshots/workflow.png)
 
 ---
 
