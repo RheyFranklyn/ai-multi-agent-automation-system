@@ -71,7 +71,6 @@ Used for generating downloadable reports.
 ## Error Handling
 - Invalid classification defaults to SUPPORT branch
 - Missing input is handled via Normalize node
-- API failures are retried manually or logged
 
 ---
 
