@@ -1,1 +1,1099 @@
-
+{
+  "name": "AI Multi-Agent Business Automation System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/ai-support",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1072,
+        304
+      ],
+      "id": "3bdf1b8b-c889-4930-bba9-4158b69bc02c",
+      "name": "Webhook",
+      "webhookId": "265f5444-232b-4f82-9264-4c69edb68ec8"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        496
+      ],
+      "id": "cd28cbe3-ce69-438b-a639-d701dd21088e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "c2GDWwSHp7pnmEtS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Normalize Message').item.json.message }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a research assistant.\n\nFrom the search results below:\n\n1. Extract 3 key facts\n2. Create a bullet point briefing\n\nFormat:\n\n- Fact 1:\n- Fact 2:\n- Fact 3:\n\nBriefing:\n(5–6 sentences)\n\nSearch Results:\n{{ JSON.stringify($json.results) }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        336,
+        0
+      ],
+      "id": "a55b7480-1085-4f22-acaf-e55982cb4f83",
+      "name": "Research Summarizer"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        144
+      ],
+      "id": "df215d01-2f55-4dd7-a1f4-a70b8c402a41",
+      "name": "Google Gemini Chat Model1",
+      "notesInFlow": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "c2GDWwSHp7pnmEtS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -656,
+        304
+      ],
+      "id": "027eafe5-7a74-450d-afe5-ea00aee56f1a",
+      "name": "Wait",
+      "webhookId": "c100134e-472b-4fdc-9469-3860e1728769"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        896
+      ],
+      "id": "25516d14-6bc5-44a3-8b3c-ad4504ba78e1",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "c2GDWwSHp7pnmEtS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0",
+          "mode": "list",
+          "cachedResultName": "goTeam Assessment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1986973214,
+          "mode": "list",
+          "cachedResultName": "Productivity",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit#gid=1986973214"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task": "={{ $json.task_output }}",
+            "Source": "={{ $('Normalize Message').item.json.message }}"
+          },
+          "matchingColumns": [
+            "Task"
+          ],
+          "schema": [
+            {
+              "id": "Task",
+              "displayName": "Task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        912
+      ],
+      "id": "560997fc-c5a2-4f4c-9c8b-de706a38d4c9",
+      "name": "Append row in PRODUCTIVITY sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9YCKz3SYNaaHQQtD",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0",
+          "mode": "list",
+          "cachedResultName": "goTeam Assessment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Summarizer",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ $('Normalize Message').item.json.message }}",
+            "Summary": "={{ $json.summary_output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        -176
+      ],
+      "id": "a5bfb89d-2198-476f-891d-89ad224131b8",
+      "name": "Append row in SUMMARIZER sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9YCKz3SYNaaHQQtD",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "11842bcb-5c11-4d7f-9f13-bb41580c5dba",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "e93ec076-93d5-44db-91da-8ba652e95878",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -864,
+        304
+      ],
+      "id": "f4463894-194e-4884-9cc8-7ab9c27fb0c4",
+      "name": "Normalize Message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=AIzaSyBritWLhSYXKuXBxhKX9VpLkO02t9Y_p4Q",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are a strict intent classification system.\\n\\nYour ONLY task is to classify the user message into ONE category.\\n\\nCATEGORIES:\\n\\nSUPPORT:\\n- Problems, errors, bugs, account issues, complaints\\n- User needs help fixing something\\n- Anything involving troubleshooting\\n\\nRESEARCH:\\n- Questions asking for information, explanations, knowledge\\n- Topics like AI, technology, science, trends, \\\"what is\\\", \\\"how does\\\", \\\"why\\\"\\n- Anything informational or educational (NOT a problem)\\n\\nPRODUCTIVITY:\\n- Tasks, to-do lists, planning, reminders, notes\\n- Turning text into organized lists or schedules\\n\\nCRITICAL RULES:\\n- Output ONLY ONE WORD\\n- Output must be EXACTLY: SUPPORT, RESEARCH, or PRODUCTIVITY\\n- No punctuation\\n- No explanation\\n- No extra text\\n\\nDECISION RULE:\\nIf the user is asking \\\"what is / how / explain / trends / future / information\\\"\\n→ ALWAYS choose RESEARCH\\n\\nUser message:\\n{{$json.message}}\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -448,
+        304
+      ],
+      "id": "1104a2e3-c1ad-4eb2-8ecb-050058f67d25",
+      "name": "AI | Intent Classifier"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.candidates[0].content.parts[0].text }}",
+                    "rightValue": "RESEARCH",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "152c247e-ce11-43db-85d7-677fac593197"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RESEARCH"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a748bb96-8eb2-4901-8c26-95da9fade9d0",
+                    "leftValue": "={{ $json.candidates[0].content.parts[0].text }}",
+                    "rightValue": "SUPPORT",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SUPPORT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f7896d7d-1e19-4dfb-9a7a-0642f7c3d717",
+                    "leftValue": "={{ $json.candidates[0].content.parts[0].text }}",
+                    "rightValue": "PRODUCTIVITY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PRODUCTIVITY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        288
+      ],
+      "id": "531762b4-8620-408f-b4a0-7eea7c1cca6a",
+      "name": "Router | Intent Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Normalize Message').item.json.email }}",
+        "subject": "Support Response",
+        "emailType": "text",
+        "message": "={{ $json.response }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        320
+      ],
+      "id": "11246984-0df9-48db-b8a6-5aec6ee736f1",
+      "name": "Support | Send Email Reply",
+      "webhookId": "f48767d7-0ba2-4d9b-8405-c20953efd984",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "veIqHkdkeHkFmeFU",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://serpapi.com/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $('Normalize Message').item.json.message }}"
+            },
+            {
+              "name": "api_key",
+              "value": "0a6d05c9f126fe47b6c99aad392fbd23ddbe537a9c869ce9c3fb5e2ad2cc6e23"
+            },
+            {
+              "name": "engine",
+              "value": "google"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "177708ed-7cf7-4f1d-8e3d-d5e1c97f78ba",
+      "name": "SerpAPI | Web Search"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "87893805-ed64-4276-a9db-ba891ac318a8",
+              "name": "results",
+              "value": "={{$json.organic_results.slice(0, 5)}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        80
+      ],
+      "id": "cc1a01b6-c253-42cc-91ed-db5d09cc69cf",
+      "name": "Research | Extract Top Results"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "58532bce-a8a3-41d5-b09b-1ffbeeadbc60",
+              "name": "html",
+              "value": "=<html>\n<head>\n  <style>\n    body {\n      font-family: \"Times New Roman\", Times, serif;\n      padding: 60px;\n      color: #000;\n      line-height: 1.8;\n      font-size: 16px;\n    }\n\n    h1 {\n      text-align: center;\n      font-size: 20px;\n      font-weight: bold;\n      margin-bottom: 25px;\n    }\n\n    .topic {\n      margin-bottom: 25px;\n      font-size: 14px;\n    }\n\n    .section-title {\n      font-weight: bold;\n      margin-top: 20px;\n \n      font-size: 15px;\n    }\n\n    .content {\n      white-space: pre-wrap;\n      text-align: justify;\n    }\n\n    .fact-block {\n      margin-bottom: 20px;\n    }\n\n    .spacer {\n      margin-top: 40px; /* SPACE AFTER FACT 3 */\n    }\n\n    .footer-space {\n      margin-top: 60px;\n    }\n  </style>\n</head>\n\n<body>\n\n<h1>AI Research Report</h1>\n\n<div class=\"topic\">\n  <strong>Topic:</strong> {{$node[\"Normalize Message\"].json.message}}\n</div>\n\n<div class=\"section-title\">Research Findings</div>\n\n<div class=\"content fact-block\">\n{{ $json.summary_output }}\n</div>\n\n\n\n</body>\n</html>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        48
+      ],
+      "id": "17fe9482-0b0f-434f-aba0-e7f0b69f4c47",
+      "name": "Research | Build Report HTML"
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "output_format": "file"
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        48
+      ],
+      "id": "d10913ed-b511-45cc-a4d6-b9a7489b817d",
+      "name": "Research | Generate PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "qMVjHIG3DGkUS3qA",
+          "name": "HTML to PDF account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Research | Normalize').item.json.email }}",
+        "subject": "AI Research Report",
+        "message": "<h3>Your AI Research Report is ready</h3> <p>Attached is your research summary PDF.</p>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        48
+      ],
+      "id": "ae3108a6-e598-47fc-9cfc-63930573d4bc",
+      "name": "Research | Send Report Email",
+      "webhookId": "9f4cd44c-0b8e-4f93-a0a5-89e5eeb49108",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "veIqHkdkeHkFmeFU",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ed4b1fd-d737-4bb4-8b69-77037c4a60a4",
+              "name": "summary_output",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a57fba00-0fd7-4aba-af45-e828934a6420",
+              "name": "email",
+              "value": "={{ $('Normalize Message').item.json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        0
+      ],
+      "id": "dd943b92-f766-427b-9c8f-46ed6e8863e9",
+      "name": "Research | Normalize"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Normalize Message').item.json.message }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a productivity assistant.  Convert the user's messy text into a clean, actionable TODO list.  RULES: - Only output tasks - Keep it simple and clear - If urgency is implied, add (High), (Medium), or (Low) - No explanations  FORMAT: 1. Task (Priority) 2. Task (Priority) 3. Task (Priority)  User Input: {{ $('Normalize Message').item.json.message }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -32,
+        720
+      ],
+      "id": "0b5af346-7287-492e-b34e-3f3068067ebd",
+      "name": "Productivity | Task Generator"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4817d40b-78c4-40b0-9e94-aa27ec2517ea",
+              "name": "html",
+              "value": "=<!DOCTYPE html> <html> <head>   <style>     body {       font-family: Arial;       padding: 30px;     }      h1 {       color: #333;     }      .tasks {       margin-top: 20px;       line-height: 1.8;       white-space: pre-line;     }   </style> </head> <body>  <h1>AI Productivity Report</h1>  <p><strong>Date:</strong> {{ new Date().toLocaleDateString() }}</p>  <div class=\"tasks\"> {{ $json.task_output }} </div>  </body> </html>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        720
+      ],
+      "id": "3f0f0a2a-6f97-49cc-bad6-3d5596f6706c",
+      "name": "Productivity | Build Report HTML"
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "output_format": "file",
+        "output_filename": "productivity-report"
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        768,
+        720
+      ],
+      "id": "7c08d141-f6bc-4d57-81e9-307a4dbc71fa",
+      "name": "Productivity | Generate PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "qMVjHIG3DGkUS3qA",
+          "name": "HTML to PDF account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tigtigrhey2@gmail.com",
+        "subject": "AI Productivity Report",
+        "message": "<h2>Your AI Productivity Report is Ready</h2>  <p>Your task report PDF has been generated successfully.</p>  <p>Please see the attached file.</p>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        720
+      ],
+      "id": "409c9c9d-512f-4ae8-ba46-9bb9ee83d2df",
+      "name": "Productivity | Send Task Report",
+      "webhookId": "c5475406-eee5-4393-92ab-f62ebf02fa75",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "veIqHkdkeHkFmeFU",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "91583dff-c11f-45e3-aa84-e49f29e976d6",
+              "name": "task_output",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a9f5066d-18fe-4fe2-b10d-036e44e6bb6d",
+              "name": "email",
+              "value": "={{ $('Normalize Message').item.json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        720
+      ],
+      "id": "3f4ec623-eb78-4de4-b2cb-3154e42f4e49",
+      "name": "Productivity | Normalize"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Normalize Message').item.json.message }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a smart customer support triage agent.\n\nAnalyze the support ticket.\n\nINPUT:\n{{$json.message}}\n\nTASKS:\n1. Detect sentiment:\n   - Positive\n   - Neutral\n   - Frustrated\n\n2. Categorize issue:\n   - Technical\n   - Billing\n   - Feedback\n\n3. Generate professional response.\n\nIMPORTANT:\nReturn ONLY valid JSON.\n\nFORMAT:\n\n{\n  \"sentiment\": \"\",\n  \"category\": \"\",\n  \"response\": \"\"\n}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        160,
+        320
+      ],
+      "id": "e835c38a-7a4e-4476-92b4-7b3f8791842f",
+      "name": "Support | Smart Triage Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = JSON.parse($json.text);\n\nreturn [\n  {\n    json: parsed\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        320
+      ],
+      "id": "03d01d89-19a2-41e2-8356-7247ea47d8ec",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0",
+          "mode": "list",
+          "cachedResultName": "goTeam Assessment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 43711186,
+          "mode": "list",
+          "cachedResultName": "Support",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RbrL6lnXRxhapOmMBV06X7BrRnXBhx11oNiOWqd-TV0/edit#gid=43711186"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Message": "={{ $('Normalize Message').item.json.message }}",
+            "Sentiment": "={{ $json.sentiment }}",
+            "Response": "={{ $json.response }}",
+            "Category": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Response",
+              "displayName": "Response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        704,
+        528
+      ],
+      "id": "7acbbd41-a36d-41cf-817b-d4d2be2d2c41",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9YCKz3SYNaaHQQtD",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "email": "tigtigrhey2@gmail.com",
+          "message": "Trends of high fashion for the next 10 years?."
+        }
+      },
+      {
+        "json": {
+          "email": "tigtigrhey2@gmail.com",
+          "message": "I have encountered login issue and i dont know what to do!."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Support | Smart Triage Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Summarizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Research | Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "AI | Intent Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Productivity | Task Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI | Intent Classifier": {
+      "main": [
+        [
+          {
+            "node": "Router | Intent Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router | Intent Switch": {
+      "main": [
+        [
+          {
+            "node": "SerpAPI | Web Search",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Support | Smart Triage Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Productivity | Task Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI | Web Search": {
+      "main": [
+        [
+          {
+            "node": "Research | Extract Top Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research | Extract Top Results": {
+      "main": [
+        [
+          {
+            "node": "Research Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research | Build Report HTML": {
+      "main": [
+        [
+          {
+            "node": "Research | Generate PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research | Generate PDF": {
+      "main": [
+        [
+          {
+            "node": "Research | Send Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research | Normalize": {
+      "main": [
+        [
+          {
+            "node": "Append row in SUMMARIZER sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Research | Build Report HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productivity | Task Generator": {
+      "main": [
+        [
+          {
+            "node": "Productivity | Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productivity | Build Report HTML": {
+      "main": [
+        [
+          {
+            "node": "Productivity | Generate PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productivity | Generate PDF": {
+      "main": [
+        [
+          {
+            "node": "Productivity | Send Task Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Productivity | Normalize": {
+      "main": [
+        [
+          {
+            "node": "Append row in PRODUCTIVITY sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Productivity | Build Report HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Support | Smart Triage Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Support | Send Email Reply": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Support | Send Email Reply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7e8610c4-9cfb-4295-81d4-95e30d430fc9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d6c21af74d5a67ff063933961175c9f40ae396b048fa623a3c0bb3d437d419cc"
+  },
+  "id": "jZOh4TrQ1rBg2kgQ",
+  "tags": []
+}
