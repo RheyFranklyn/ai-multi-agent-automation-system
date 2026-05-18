@@ -37,7 +37,7 @@ The system uses AI intent classification to route incoming requests into special
 
 ## Workflow Architecture
 
-![Workflow Diagram](screenshots/workflow.png)
+![Workflow Diagram](screenshots/workflow-diagram.png)
 
 ---
 
